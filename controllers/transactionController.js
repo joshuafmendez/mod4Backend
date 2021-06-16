@@ -9,8 +9,8 @@ transactions.post("/", (req, res) => {
 
 // DELETE
 transactions.delete("/:indexArray", (req, res) => {
-  const deletedBookmark = transactionArray.splice(req.params.indexArray, 1);
-  res.status(200).json(deletedBookmark);
+  const deletedTransaction = transactionArray.splice(req.params.indexArray, 1);
+  res.status(200).json(deletedTransaction);
 });
 
 // UPDATE
@@ -20,6 +20,7 @@ transactions.put("/:arrayIndex", (req, res) => {
 });
 
 transactions.get("/:arrayIndex", (req, res) => {
+    console.log(transactionArray[req.params.arrayIndex].id);
   if (transactionArray[req.params.arrayIndex]) {
     res.json(transactionArray[req.params.arrayIndex]);
   } else {
