@@ -20,7 +20,6 @@ transactions.put("/:arrayIndex", (req, res) => {
 });
 
 transactions.get("/:arrayIndex", (req, res) => {
-    console.log(transactionArray[req.params.arrayIndex].id);
   if (transactionArray[req.params.arrayIndex]) {
     res.json(transactionArray[req.params.arrayIndex]);
   } else {
