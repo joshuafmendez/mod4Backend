@@ -1,5 +1,5 @@
 const transactions = require("express").Router();
-const transactionArray = require("../models/transaction.js");
+let transactionArray = require("../models/transaction.js");
 
 // CREATE
 transactions.post("/", (req, res) => {
@@ -8,20 +8,32 @@ transactions.post("/", (req, res) => {
 });
 
 // DELETE
-transactions.delete("/:indexArray", (req, res) => {
-  const deletedTransaction = transactionArray.splice(req.params.indexArray, 1);
+transactions.delete("/:transactionID", (req, res) => {
+  const matchingTransaction = transactionArray.find((transaction) => {
+    return transaction.id === req.params.transactionID;
+  });
+  const deletedTransaction = transactionArray.splice(matchingTransaction, 1);
   res.status(200).json(deletedTransaction);
 });
 
 // UPDATE
-transactions.put("/:arrayIndex", (req, res) => {
-  transactionArray[req.params.arrayIndex] = req.body;
-  res.status(200).json(transactionArray[req.params.arrayIndex]);
+transactions.put("/:transactionID", (req, res) => {
+  const matchingTransaction = transactionArray.map((transaction) => {
+    if(transaction.id === req.params.transactionID){
+      return {...transaction, ...req.body}
+    }
+    return transaction;
+  });
+  transactionArray = matchingTransaction;
+  res.status(200).json({transactions: matchingTransaction, message: "success"});
 });
 
-transactions.get("/:arrayIndex", (req, res) => {
-  if (transactionArray[req.params.arrayIndex]) {
-    res.json(transactionArray[req.params.arrayIndex]);
+transactions.get("/:transactionID", (req, res) => {
+  const matchingTransaction = transactionArray.find((transaction) => {
+    return transaction.id === req.params.transactionID;
+  });
+  if (matchingTransaction) {
+    res.json(matchingTransaction);
   } else {
     res.redirect("/404");
   }
@@ -37,3 +49,4 @@ transactions.post("/", (req, res) => {
 });
 
 module.exports = transactions;
+

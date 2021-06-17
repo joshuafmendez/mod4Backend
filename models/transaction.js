@@ -1,6 +1,8 @@
+const { v4: uuidv4 } = require('uuid');
+
 const trans = [
     {
-        id: "1st",
+        id: "ac43ed4f-cf1a-42be-b557-7cc624892228",
         from: "Joshua",
         date: "2021-06-01",
         name: "Rent",
@@ -8,7 +10,7 @@ const trans = [
         notes: "sucks the life out of me"
     }, 
     {
-        id: "2nd",
+        id: uuidv4(),
         from: "Dad",
         date: "2021-06-14",
         name: "Best Son",
