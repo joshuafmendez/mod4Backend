@@ -13,7 +13,6 @@ describe("Test the root path", () => {
 });
 
 let transactionArray = require("../models/transaction");
-
 describe("Test the transactions path", () => {
   let originalTransArray = transactionArray;
   beforeEach(() => {
@@ -50,7 +49,6 @@ describe("Test the transactions path", () => {
       expect(transactionArray[newLastArrayPosition]).toEqual(newTransaction);
     });
   });
-
   describe("/transactions/:id", () => {
     describe("GET", () => {
       it("sends the corresponding transaction when a valid id is given", async () => {
@@ -70,7 +68,7 @@ describe("Test the transactions path", () => {
     });
 
     describe("PUT", () => {
-      it("replaces items in a given id in the transactions array", async () => {
+      it("replaces items in a given transaction by id", async () => {
         const response = await req(app).get(
           "/transactions/ac43ed4f-cf1a-42be-b557-7cc624892228"
         );
@@ -82,8 +80,7 @@ describe("Test the transactions path", () => {
           amount: 500,
           notes: "Gift to purchase sofa",
         };
-        // const body = response.body
-        const editedTransaction = {...response.body, ...updatedTransaction}
+        const editedTransaction = { ...response.body, ...updatedTransaction };
         await new Promise((resolve) => {
           req(app)
             .put(`/transactions/${response.body.id}`)
@@ -93,8 +90,28 @@ describe("Test the transactions path", () => {
             .expect("statusCode", 303)
             .end(resolve);
         });
-
         expect(editedTransaction).toEqual(updatedTransaction);
+      });
+    });
+
+    describe("DELETE", () => {
+      it("deletes by the id", async () => {
+        const response = await req(app).get("/transactions");
+        const transArray = response.body;
+        const originalLength = transArray.length;
+        const specificTrans = transArray[1];
+        await new Promise((resolve) => {
+          req(app)
+            .delete(`/transactions/${specificTrans.id}`)
+            .set("Accept", "application/json")
+            .expect("headers.location", "/transactions")
+            .expect("statusCode", 303)
+            .end(resolve);
+        });
+        const res = await req(app).get("/transactions");
+        const newTransArray = res.body;
+        expect(transArray[2]).toEqual(newTransArray[1]);
+        expect(newTransArray).toHaveLength(originalLength - 1);
       });
     });
   });
