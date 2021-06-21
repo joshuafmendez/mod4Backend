@@ -12,7 +12,7 @@ transactions.delete("/:transactionID", (req, res) => {
   const matchingTransaction = transactionArray.find((transaction) => {
     return transaction.id === req.params.transactionID;
   });
-  const deletedTransaction = transactionArray.splice(matchingTransaction, 1);
+  transactionArray.splice(matchingTransaction, 1);
   res.status(200).json(transactionArray);
 });
 
